@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>bundleid</key>
+	<string>mdurussel_datediff</string>
+	<key>connections</key>
+	<dict>
+		<key>1A29DAFA-7619-429C-B57C-825CB95E4FEE</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>17602742-78F8-4B96-827A-82D6EFDE002D</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
+	</dict>
+	<key>createdby</key>
+	<string>Mike Du Russel</string>
+	<key>description</key>
+	<string>Calculate the difference in days between today and another date.</string>
+	<key>disabled</key>
+	<false/>
+	<key>name</key>
+	<string>Date Difference</string>
+	<key>objects</key>
+	<array>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>autopaste</key>
+				<false/>
+				<key>clipboardtext</key>
+				<string>{query}</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.output.clipboard</string>
+			<key>uid</key>
+			<string>17602742-78F8-4B96-827A-82D6EFDE002D</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>0</integer>
+				<key>escaping</key>
+				<integer>0</integer>
+				<key>keyword</key>
+				<string>datediff</string>
+				<key>runningsubtext</key>
+				<string>Calculating...</string>
+				<key>script</key>
+				<string>require_once('workflows.php');
+$w = new Workflows();
+
+date_default_timezone_set('America/New_York');
+
+function calculateDateDiff($inputDate) {
+	// Create date objects
+	try {
+		$date1 = new DateTime($inputDate);
+		$date2 = new DateTime('NOW');
+	} catch (Exception $e) {
+		$return = array();
+		array_push( $return, array(
+			'uid' =&gt; 'datediff_notyet',
+			'arg' =&gt; 'datediff_notyet',
+			'title' =&gt; 'Keep Typing..',
+			'subtitle' =&gt; 'End your query with a space to calculate..',
+			'icon' =&gt; 'icon.png',
+			'valid' =&gt; 'no'
+		));
+		return $return;
+	}
+
+	// Calculate difference
+	$interval = $date1-&gt;diff($date2);
+	$real = $interval-&gt;y . " years, " . $interval-&gt;m . " months and " . $interval-&gt;d . " days.";
+
+	// generate return
+	$return = array();
+
+	array_push( $return, array(
+		'uid' =&gt; 'datediff_real',
+		'arg' =&gt; $interval-days,
+		'title' =&gt; $interval-&gt;days,
+		'icon' =&gt; 'icon.png',
+		'valid' =&gt; 'yes'
+	));
+
+	array_push( $return, array(
+		'uid' =&gt; 'datediff_real',
+		'arg' =&gt; $real,
+		'title' =&gt; $real,
+		'icon' =&gt; 'icon.png',
+		'valid' =&gt; 'yes'
+	));
+
+	return $return;
+}
+
+$input = "{query}";
+
+$results = calculateDateDiff($input);
+
+echo $w-&gt;toxml( $results );</string>
+				<key>subtext</key>
+				<string>Calculate the date difference.</string>
+				<key>title</key>
+				<string>Date Difference</string>
+				<key>type</key>
+				<integer>1</integer>
+				<key>withspace</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.scriptfilter</string>
+			<key>uid</key>
+			<string>1A29DAFA-7619-429C-B57C-825CB95E4FEE</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+	</array>
+	<key>readme</key>
+	<string></string>
+	<key>uidata</key>
+	<dict>
+		<key>17602742-78F8-4B96-827A-82D6EFDE002D</key>
+		<dict>
+			<key>ypos</key>
+			<real>230</real>
+		</dict>
+		<key>1A29DAFA-7619-429C-B57C-825CB95E4FEE</key>
+		<dict>
+			<key>ypos</key>
+			<real>260</real>
+		</dict>
+	</dict>
+	<key>webaddress</key>
+	<string></string>
+</dict>
+</plist>
